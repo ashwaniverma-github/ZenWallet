@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-3xl mx-auto space-y-6">
-        <div className="glass-panel p-6 flex items-center justify-between">
+        <div className="glass-panel p-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold ">
               ZenWallet

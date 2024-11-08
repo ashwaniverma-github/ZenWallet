@@ -3,7 +3,6 @@ import { ethers } from 'ethers';
 import {WalletIcon, Plus, Copy} from 'lucide-react';
 import { useFormContext } from '../lib/formContext';
 
-
 interface Wallet {
     address:string
 }
@@ -43,8 +42,8 @@ function WalletSection({onCopy}:WalletSectionProps){
     };
     
     return (
-        <div className="glass-panel p-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="glass-panel p-4 sm:p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center ring-4 ring-amber-500/10">
                 <WalletIcon className="w-6 h-6 text-emerald-400" />
@@ -58,7 +57,7 @@ function WalletSection({onCopy}:WalletSectionProps){
               </div>
             </div>
             <button  
-            className=" btn btn-success flex items-center gap-2"
+            className="w-full sm:w-auto btn btn-success flex items-center justify-center gap-2"
             onClick={generateWallet} 
             title={!seedPhrase?'Generate a recovery key first' :'Generate a new wallet'}>
               <Plus/>
@@ -66,23 +65,23 @@ function WalletSection({onCopy}:WalletSectionProps){
             </button>
           </div>
 
-          <div className='space-y-4 p-6 bg-slate-400/20 rounded-lg' >
+          <div className='space-y-4 p-4 sm:p-6 bg-slate-400/20 rounded-lg'>
             {wallets.length>0 ?(
-                <div className='text-md font-mono space-y-2'>
+                <div className='text-sm sm:text-md font-mono space-y-2'>
                     {wallets.map((wallet:Wallet,index:number)=>(
-                        <div className='flex justify-between' key={index}>{wallet.address}
-                          <Copy  onClick={()=>onCopy(wallet.address)} className='text-gray-400 cursor-pointer' width={20} />
+                        <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0' key={index}>
+                            <div className="break-all">{wallet.address}</div>
+                            <Copy onClick={()=>onCopy(wallet.address)} className='text-gray-400 cursor-pointer ml-auto' width={20} />
                         </div>
                     ))}
-                    
                 </div>
             ):(
-                <div className='text-center py-16 px-6' >
-                    <div className='flex items-center justify-center w-14 h-14 rounded-2xl mx-auto bg-slate-800/50 mb-4' >
+                <div className='text-center py-8 sm:py-16 px-4 sm:px-6'>
+                    <div className='flex items-center justify-center w-14 h-14 rounded-2xl mx-auto bg-slate-800/50 mb-4'>
                         <WalletIcon className='w-8 h-8' />
                     </div>
                     <h1>No Wallets yet</h1>
-                    <p className='text-gray-400 max-w-sm mx-auto' >
+                    <p className='text-gray-400 max-w-sm mx-auto'>
                         {seedPhrase?"Click 'New Wallet' above to create your first wallet"
                         :"Generate a recovery phrase to create a wallet"}
                     </p>
@@ -90,8 +89,7 @@ function WalletSection({onCopy}:WalletSectionProps){
             )}
           </div>
         </div>
-        
-      );
+    );
 }
 
 export default WalletSection;
