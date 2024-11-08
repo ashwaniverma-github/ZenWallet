@@ -32,7 +32,7 @@ function MnemonicSection({ onCopy }: MnemonicSectionProps) {
         ) : (
           <button 
             onClick={generateSeed} 
-            className="font-bold text-base sm:text-lg px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.1] transition"
+            className="font-bold text-base my-10  sm:my-0 sm:text-lg px-16 sm:px-4 mx-auto sm:mx-0 py-4 sm:py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.1] transition"
           >
             Generate
           </button>
