@@ -1,30 +1,47 @@
 'use client'
 import { ethers } from 'ethers';
-import {WalletIcon, Plus } from 'lucide-react';
-import { useEffect } from 'react';
+import {WalletIcon, Plus, Copy} from 'lucide-react';
 import { useFormContext } from '../lib/formContext';
+
 
 interface Wallet {
     address:string
 }
 
-function WalletSection(){
+interface WalletSectionProps {
+  onCopy:(address:string)=>void
+}
+
+function WalletSection({onCopy}:WalletSectionProps){
     const {wallets , setWallets , seedPhrase} = useFormContext() as {
         wallets: Wallet[];
         setWallets: React.Dispatch<React.SetStateAction<Wallet[]>>;
         seedPhrase: string | undefined;
       };
-    const generateWallet = async ()=>{
-        if(!seedPhrase)return;
-        const wallet = ethers.Wallet.fromPhrase(seedPhrase)
-        const newWallet = {
-            address:wallet.address
+    
+      const generateWallet = () => {
+        if (!seedPhrase) return;
+
+        try {
+            const index = wallets.length;
+            const path = `m/44'/60'/0'/0/${index}`;
+
+            const derivedWallet = ethers.HDNodeWallet.fromMnemonic(
+                ethers.Mnemonic.fromPhrase(seedPhrase),
+                path
+            );
+
+            const newWallet = {
+                address: derivedWallet.address,
+                path: path
+            };
+
+            setWallets(prevWallets => [...prevWallets, newWallet]);
+        } catch (error) {
+            console.error('Error generating wallet:', error);
         }
-        setWallets((prevWallet)=>[...prevWallet , newWallet])       
-    }
-    useEffect(()=>{
-        console.log(wallets)
-    },[wallets])
+    };
+    
     return (
         <div className="glass-panel p-8">
           <div className="flex items-center justify-between mb-6">
@@ -49,12 +66,15 @@ function WalletSection(){
             </button>
           </div>
 
-          <div className='space-y-4' >
+          <div className='space-y-4 p-6 bg-slate-400/20 rounded-lg' >
             {wallets.length>0 ?(
-                <div>
+                <div className='text-md font-mono space-y-2'>
                     {wallets.map((wallet:Wallet,index:number)=>(
-                        <div key={index}>{wallet.address}</div>
+                        <div className='flex justify-between' key={index}>{wallet.address}
+                          <Copy  onClick={()=>onCopy(wallet.address)} className='text-gray-400 cursor-pointer' width={20} />
+                        </div>
                     ))}
+                    
                 </div>
             ):(
                 <div className='text-center py-16 px-6' >

@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
 import { Copy, Key  , ShieldAlert} from "lucide-react";
-import { Toast } from "./sm-component/toast";
 import { useFormContext } from "../lib/formContext";
-function MnemonicSection() {
+
+interface MnemonicSectionProps {
+  onCopy:()=>void
+}
+
+function MnemonicSection({onCopy}:MnemonicSectionProps) {
   const {seedPhrase, setSeedPhrase} = useFormContext()
-  const [toast,setToast] = useState({message:"",visible:false})
 
   async function generateSeed() {
     const response = await fetch("/api/generateMnemonic");
@@ -13,15 +15,6 @@ function MnemonicSection() {
     setSeedPhrase(data.seedPhrase);
   }
 
-  const copy = () => {
-    navigator.clipboard.writeText(seedPhrase);
-    showToast("Copied to CLipboard")
-  };
-
-  const showToast = (message:string)=>{
-    setToast({message,visible:true})
-    setTimeout(()=>setToast({message,visible:false}),2000)
-  }
 
   return (
     <div className="glass-panel p-8">
@@ -35,9 +28,14 @@ function MnemonicSection() {
             <p className="text-gray-400 text-sm">Your unique 12-word secret phrase is</p>
           </div>
         </div>
-        <button onClick={generateSeed} className="font-bold text-lg">
+        {seedPhrase?(
+          <div>{}</div>
+        ):(
+          <button onClick={generateSeed} className="font-bold text-lg">
           Generate
         </button>
+        )}
+        
       </div>
 
       {seedPhrase ? (
@@ -56,7 +54,7 @@ function MnemonicSection() {
             ))}
           </div>
           <button
-            onClick={copy}
+            onClick={onCopy}
             className="mt-4 px-4 py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.1] flex items-center gap-2 text-gray-400 hover:text-white transition"
           >
             <Copy className="w-4 h-4" />
@@ -73,8 +71,6 @@ function MnemonicSection() {
           <p className="text-gray-400">Generate a secure recovery phrase to start managing your wallets.</p>
         </div>
       )}
-
-      {toast.visible && <Toast message={toast.message} visible={toast.visible} /> }
     </div>
     
   );

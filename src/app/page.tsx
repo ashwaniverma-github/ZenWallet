@@ -2,9 +2,27 @@
 import { Shield } from 'lucide-react';
 import MnemonicSection from './components/mnemonicSection';
 import WalletSection from './components/walletSection';
+import { useFormContext } from './lib/formContext';
+import { useState } from 'react';
+import { Toast } from './components/sm-component/toast';
 
 export default function Home() {
-  
+  const {seedPhrase} = useFormContext()
+  const [toast,setToast] = useState({message:"",visible:false})
+
+  const copySeed = () => {
+    navigator.clipboard.writeText(seedPhrase);
+    showToast("Copied to CLipboard")
+  };
+  const copyWallet = (address:string)=>{
+    navigator.clipboard.writeText(address)
+    showToast("Wallet address copied to clipboard")
+  }
+
+  const showToast = (message:string)=>{
+    setToast({message,visible:true})
+    setTimeout(()=>setToast({message,visible:false}),2000)
+  }
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-3xl mx-auto space-y-6">
@@ -19,10 +37,10 @@ export default function Home() {
             <span className="text-white/70">Secure Environment</span>
           </div>
       </div>
-      <MnemonicSection/>
-      <WalletSection/>
+      <MnemonicSection onCopy={copySeed} />
+      <WalletSection onCopy = {copyWallet} />
       </div>
-      
+      {toast.visible && <Toast message={toast.message} visible={toast.visible} /> }
      </div>
 
 
