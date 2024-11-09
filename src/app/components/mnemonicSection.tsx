@@ -1,6 +1,7 @@
 "use client";
-import { Copy, Key, ShieldAlert } from "lucide-react";
+import { Copy, Key, ShieldAlert , Loader2 } from "lucide-react";
 import { useFormContext } from "../lib/formContext";
+import { useState } from "react";
 
 interface MnemonicSectionProps {
   onCopy: () => void;
@@ -8,9 +9,11 @@ interface MnemonicSectionProps {
 
 function MnemonicSection({ onCopy }: MnemonicSectionProps) {
   const { seedPhrase, setSeedPhrase } = useFormContext();
+  const [generating,setGenerating] = useState(false)
 
   async function generateSeed() {
     const response = await fetch("/api/generateMnemonic");
+    setGenerating(true)
     const data = await response.json();
     setSeedPhrase(data.seedPhrase);
   }
@@ -34,7 +37,11 @@ function MnemonicSection({ onCopy }: MnemonicSectionProps) {
             onClick={generateSeed} 
             className="font-bold text-base my-10  sm:my-0 sm:text-lg px-16 sm:px-4 mx-auto sm:mx-0 py-4 sm:py-2 bg-white/[0.05] rounded-lg hover:bg-white/[0.1] transition"
           >
-            Generate
+            {generating?(
+              <div><Loader2/></div>
+            ):(
+              <div>Generate</div>
+            )}
           </button>
         )}
       </div>
