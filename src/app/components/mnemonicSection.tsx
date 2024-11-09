@@ -12,8 +12,8 @@ function MnemonicSection({ onCopy }: MnemonicSectionProps) {
   const [generating,setGenerating] = useState(false)
 
   async function generateSeed() {
-    const response = await fetch("/api/generateMnemonic");
     setGenerating(true)
+    const response = await fetch("/api/generateMnemonic");
     const data = await response.json();
     setSeedPhrase(data.seedPhrase);
   }
